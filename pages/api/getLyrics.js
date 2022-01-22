@@ -1,6 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import fetch from 'node-fetch';
 
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
+
 const API_URL = 'https://api.genius.com/';
 // const API_CLIENT_ID =
 //   'OnmDDkFJygIwtbqbtCzMWgCNo_u-uzTQNUlU8c7Uuu6p6Z9lhAlyIVk1UKTLJDfU';
@@ -24,7 +27,51 @@ export default function handler(req, res) {
 }
 
 const getURLs = (data) => {
+  //   getURL(data);
+  //   return;
   const hits = data.response.hits;
   const urls = hits.map((hit) => hit.result.url);
   console.log(urls);
+  urls.forEach((url) => {
+    fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'text/html' },
+    }).then((response) => {
+      response.text().then((RAW_HTML) => {
+        const dom = new JSDOM(`${RAW_HTML}`);
+        // const lyrics = dom.window.document.querySelector('lyrics').textContent;
+        // console.log(lyrics);
+      });
+    });
+  });
+  // lyrics = document.querySelector('.lyrics');
+  // lyrics.textContent
 };
+
+// const getURL = (data) => {
+//   const hit = data.response.hits[0];
+//   const url = hit.result.url;
+
+//   fetch(url, {
+//     method: 'GET',
+//     headers: { 'Content-Type': 'text/html' },
+//   }).then((response) => {
+//     response.text().then((RAW_HTML) => {
+//       //   console.log(RAW_HTML);
+//       const dom = new JSDOM(`${RAW_HTML}`);
+//       const lyrics = dom.window.document.querySelector('.lyrics').textContent;
+//       console.log(lyrics);
+//     });
+//   });
+// };
+
+// const getURL = (data) => {
+//   const hit = data.response.hits[0];
+//   const url = hit.result.url;
+
+//   JSDOM.fromURL(url).then((dom) => {
+//     console.log(dom);
+//     // const lyrics = dom.window.document.querySelector('.lyrics');
+//     // console.log(lyrics);
+//   });
+// };
