@@ -12,13 +12,19 @@ const API_SEARCH_URL = `${API_URL}search?q=`;
 
 export default function handler(req, res) {
   const { q } = req.query;
-
   fetch(`${API_SEARCH_URL}${q}`, {
     method: 'GET',
     headers: { Authorization: 'Bearer ' + API_CLIENT_ACCESS_TOKEN },
-  }).then(function (response) {
-    response.json().then(function (data) {
+  }).then((response) => {
+    response.json().then((data) => {
+      getURLs(data);
       res.status(200).json(data);
     });
   });
 }
+
+const getURLs = (data) => {
+  const hits = data.response.hits;
+  const urls = hits.map((hit) => hit.result.url);
+  console.log(urls);
+};
