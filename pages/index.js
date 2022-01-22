@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [geniusData, setGeniusData] = useState('');
+
   const handleChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -14,9 +16,9 @@ export default function Home() {
       return;
     }
 
-    fetch(`/api/hello?q=${searchQuery}`)
+    fetch(`/api/getLyrics?q=${searchQuery}`)
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => setGeniusData(data) || console.log(data));
   };
 
   return (
@@ -36,6 +38,7 @@ export default function Home() {
         value={searchQuery}
       />
       <button onClick={handleGo}>Go</button>
+      <p>{geniusData && geniusData.response.hits[0].result.url}</p>
     </div>
   );
 }
