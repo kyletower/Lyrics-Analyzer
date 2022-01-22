@@ -46,7 +46,7 @@ export default function Home() {
         <p>
           {geniusData &&
             geniusData.response.hits.map((hit, idx) => (
-              <p key={idx}>{hit.result.url}</p>
+              <p key={idx}>{hit.result.full_title}</p>
             ))}
         </p>
       }
