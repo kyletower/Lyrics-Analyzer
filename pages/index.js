@@ -3,17 +3,22 @@ import styles from '../styles/Home.module.css';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-  useEffect(() => {
-    fetch('/api/hello?q=peach%20and%20bowser')
-      .then((response) => response.json())
-      .then((data) => console.log(data));
-  }, []);
-
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleChange = (event) => {
     setSearchQuery(event.target.value);
   };
+
+  const handleGo = () => {
+    if (!searchQuery) {
+      return;
+    }
+
+    fetch(`/api/hello?q=${searchQuery}`)
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -30,7 +35,7 @@ export default function Home() {
         type='search'
         value={searchQuery}
       />
-      <button onClick={() => console.log('sending ' + searchQuery)}>Go</button>
+      <button onClick={handleGo}>Go</button>
     </div>
   );
 }
