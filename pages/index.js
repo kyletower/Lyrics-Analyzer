@@ -31,6 +31,7 @@ export default function Home() {
         />
         <link rel='icon' href='/favicon.ico' />
       </Head>
+      {/* <Search/> */}
       <input
         onChange={handleChange}
         placeholder='Enter song/track title'
@@ -38,7 +39,17 @@ export default function Home() {
         value={searchQuery}
       />
       <button onClick={handleGo}>Go</button>
-      <p>{geniusData && geniusData.response.hits[0].result.url}</p>
+
+      {/* <Results/> */}
+      {/* <p>{geniusData && geniusData.response.hits[0].result.url}</p> */}
+      {
+        <p>
+          {geniusData &&
+            geniusData.response.hits.map((hit, idx) => (
+              <p key={idx}>{hit.result.url}</p>
+            ))}
+        </p>
+      }
     </div>
   );
 }
