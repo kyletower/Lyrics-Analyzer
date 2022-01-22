@@ -27,58 +27,34 @@ export default function handler(req, res) {
 }
 
 const getURLs = (data) => {
-  if (true) {
-    getURL(data);
-  } else {
-    const hits = data.response.hits;
-    const urls = hits.map((hit) => hit.result.url);
-    console.log(urls);
-    urls.forEach((url) => {
-      fetch(url, {
-        method: 'GET',
-        headers: { 'Content-Type': 'text/html' },
-      }).then((response) => {
-        response.text().then((RAW_HTML) => {
-          const dom = new JSDOM(`${RAW_HTML}`);
-          // const lyrics = dom.window.document.querySelector('lyrics').textContent;
-          // console.log(lyrics);
-        });
-      });
-    });
+  const hits = data.response.hits;
+  // limit hits to 4
+  if (hits.length > 4) {
+    hits.splice(4, hits.length - 4);
   }
-  // lyrics = document.querySelector('.lyrics');
-  // lyrics.textContent
+  const urls = hits.map((hit) => hit.result.url);
+  console.log(urls);
+  urls.forEach((url) => {
+    JSDOM.fromURL(url).then((dom) => {
+      // const domSerialized = dom.serialize();
+      // div id="lyrics-root"
+      // class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
+      const lyricsText = dom.window.document.querySelector('#lyrics-root');
+      console.log(lyricsText.textContent);
+    });
+  });
 };
 
 // const getURL = (data) => {
 //   const hit = data.response.hits[0];
 //   const url = hit.result.url;
-
-//   fetch(url, {
-//     method: 'GET',
-//     headers: { 'Content-Type': 'text/html' },
-//   }).then((response) => {
-//     response.text().then((RAW_HTML) => {
-//       //   console.log(RAW_HTML);
-//       const dom = new JSDOM(`${RAW_HTML}`);
-//       const lyrics = dom.window.document.querySelector('.lyrics').textContent;
-//       console.log(lyrics);
-//     });
+//   console.log(url);
+//   //   { pretendToBeVisual: true }
+//   JSDOM.fromURL(url).then((dom) => {
+//     // const domSerialized = dom.serialize();
+//     // div id="lyrics-root"
+//     // class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
+//     const lyricsText = dom.window.document.querySelector('#lyrics-root');
+//     console.log(lyricsText.textContent);
 //   });
 // };
-
-const getURL = (data) => {
-  const hit = data.response.hits[0];
-  const url = hit.result.url;
-  console.log(url);
-  //   { pretendToBeVisual: true }
-  JSDOM.fromURL(url).then((dom) => {
-    // const domSerialized = dom.serialize();
-
-    // div id="lyrics-root"
-    // class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
-
-    const lyricsText = dom.window.document.querySelector('#lyrics-root');
-    console.log(lyricsText.textContent);
-  });
-};
