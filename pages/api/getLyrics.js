@@ -5,7 +5,9 @@ import fetch from 'node-fetch';
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-const API_CLIENT_ACCESS_TOKEN = process.env;
+// const API_CLIENT_ACCESS_TOKEN = process.env;
+const API_CLIENT_ACCESS_TOKEN =
+  '2BFVGS1aXQXiTmuahLb1PbnfhksNqh5aRPGJ-CJR_8vfzMVhnCFb0s4qemBrvQq7';
 const API_SEARCH_URL = `https://api.genius.com/search?q=`;
 
 export default async function handler(req, res) {
