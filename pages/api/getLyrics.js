@@ -44,10 +44,14 @@ const getURLs = (data) => {
 
       lyricsDiv.innerHTML = lyricsDivAsStringModifed;
       const lyricsText = lyricsDiv.textContent;
-      console.log(lyricsText);
+      //   console.log(lyricsText);
+      // analyze lyrics func returns '' if clean, else returns list of explicit words
+      analyzeLyrics(lyricsText);
     });
   });
 };
+
+const analyzeLyrics = (lyrics) => {};
 
 // const getURL = (data) => {
 //   const hit = data.response.hits[0];
