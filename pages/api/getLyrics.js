@@ -35,8 +35,16 @@ const getURLs = (data) => {
       // const domSerialized = dom.serialize();
       // div id="lyrics-root"
       // class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
-      const lyricsText = dom.window.document.querySelector('#lyrics-root');
-      console.log(lyricsText.textContent);
+      const lyricsDiv = dom.window.document.querySelector('#lyrics-root');
+      const lyricsDivAsString = lyricsDiv.innerHTML;
+      const lyricsDivAsStringModifed = lyricsDivAsString.replaceAll(
+        `<br>`,
+        `\n`
+      );
+
+      lyricsDiv.innerHTML = lyricsDivAsStringModifed;
+      const lyricsText = lyricsDiv.textContent;
+      console.log(lyricsText);
     });
   });
 };
