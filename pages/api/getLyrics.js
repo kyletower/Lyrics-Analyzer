@@ -47,11 +47,13 @@ const getURLs = (data) => {
       //   console.log(lyricsText);
       // analyze lyrics func returns '' if clean, else returns list of explicit words
       const profaneWords = analyzeLyrics(lyricsText);
+      const totalNumberOfProfaneWords = Object.keys(profaneWords).length;
       console.log(
-        url + ' ' + Object.keys(profaneWords).length === 0
+        url + ' ' + totalNumberOfProfaneWords === 0
           ? 'CLEAN'
-          : 'EXPLICIT'
+          : 'EXPLICIT (' + totalNumberOfProfaneWords + ' profane words)'
       );
+      console.log(profaneWords);
     });
   });
 };
@@ -69,7 +71,7 @@ const analyzeLyrics = (lyrics) => {
   // get the set of all inappropriate words in a string
   // var wordCounts = p.getWordCounts("hell no dude");
   var wordCounts = p.getWordCounts(lyrics);
-  console.log(wordCounts);
+  //   console.log(wordCounts);
   return wordCounts;
 };
 
