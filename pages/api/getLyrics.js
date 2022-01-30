@@ -46,7 +46,12 @@ const getURLs = (data) => {
       const lyricsText = lyricsDiv.textContent;
       //   console.log(lyricsText);
       // analyze lyrics func returns '' if clean, else returns list of explicit words
-      analyzeLyrics(lyricsText);
+      const profaneWords = analyzeLyrics(lyricsText);
+      console.log(
+        url + ' ' + Object.keys(profaneWords).length === 0
+          ? 'CLEAN'
+          : 'EXPLICIT'
+      );
     });
   });
 };
@@ -59,11 +64,13 @@ const analyzeLyrics = (lyrics) => {
   // 5. return { lyrics, badWrods}
   var Profane = require('profane');
   var p = new Profane();
-
+  p.removeWord('pis');
+  p.removeWord('ho');
   // get the set of all inappropriate words in a string
   // var wordCounts = p.getWordCounts("hell no dude");
   var wordCounts = p.getWordCounts(lyrics);
   console.log(wordCounts);
+  return wordCounts;
 };
 
 // const getURL = (data) => {
