@@ -51,7 +51,20 @@ const getURLs = (data) => {
   });
 };
 
-const analyzeLyrics = (lyrics) => {};
+const analyzeLyrics = (lyrics) => {
+  // 1. get list of bad words
+  // 2. for each word in lyrics
+  // 3. if word in bad words
+  // 4. add to list of bad words in song
+  // 5. return { lyrics, badWrods}
+  var Profane = require('profane');
+  var p = new Profane();
+
+  // get the set of all inappropriate words in a string
+  // var wordCounts = p.getWordCounts("hell no dude");
+  var wordCounts = p.getWordCounts(lyrics);
+  console.log(wordCounts);
+};
 
 // const getURL = (data) => {
 //   const hit = data.response.hits[0];
