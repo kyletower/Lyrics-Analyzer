@@ -12,12 +12,14 @@ const API_SEARCH_URL = `https://api.genius.com/search?q=`;
 // export default async handler = () => { } ???
 export default async function handler(req, res) {
   const { q } = req.query;
+  console.log(q);
   const response = await fetch(`${API_SEARCH_URL}${q}`, {
     method: 'GET',
     headers: { Authorization: 'Bearer ' + API_CLIENT_ACCESS_TOKEN },
   });
 
   const data = await response.json();
+  console.log(data);
   const urls = await getURLs(data);
   console.log({ urls });
   const lyricsAsTextArray = getLyricsAsText(urls);
@@ -78,9 +80,14 @@ const analyzeLyrics = (lyricsArray) => {
   var wordCounts = [];
   p.removeWord('pis');
   p.removeWord('ho');
-  lyricsArray.forEach((lyric) => {
-    wordCounts.push(p.getWordCounts(lyric));
-  });
+  for (let i = 0; i < lyricsArray.length; i++) {
+    wordCounts.push(p.getWordCounts(lyricsArray[i]));
+  }
+
+  // // forEach doesn't exist for lyricsArray
+  // lyricsArray.forEach((lyric) => {
+  //   wordCounts.push(p.getWordCounts(lyric));
+  // });
 
   //   console.log(wordCounts);
   return wordCounts;
