@@ -41,3 +41,7 @@ const Results = ({ geniusData }) => {
 };
 
 export default Results;
+// Note: should I use
+// import parse from "html-react-parser";
+/* <div className='lyrics'>{parseFloat(hit.result.lyrics_innerHTML}</div> */
+// in lieu of dangerouslySetInnerHTML
