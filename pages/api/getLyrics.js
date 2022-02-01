@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   const urls = await getURLs(data);
   console.log({ urls });
   const lyricsAsTextArray = await getLyricsAsText(urls);
-  console.log({ lyricsAsTextArray });
+  // console.log({ lyricsAsTextArray });
   // data.response.hits[idx].result.lyrics_text
   // analyze lyrics func returns '' if clean, else returns list of explicit words
   const profaneWords = analyzeLyrics(lyricsAsTextArray);
@@ -32,12 +32,21 @@ export default async function handler(req, res) {
   //       : 'EXPLICIT (' + totalNumberOfProfaneWords + ' profane words)'
   //   );
   console.log({ profaneWords });
+
+  for (let i = 0; i < lyricsAsTextArray.length; i++) {
+    data.response.hits[i].result.lyrics_text = lyricsAsTextArray[i];
+    data.response.hits[i].result.explicit =
+      Object.keys(profaneWords[i]).length !== 0;
+    data.response.hits[i].result.explicit_words = Object.keys(profaneWords[i]);
+  }
+  // data.response.hits[idx].result.lyrics_text = lyricsAsTextArray[idx];
+
   res.status(200).json(data);
 }
 
 const getURLs = (data) => {
   const hits = data.response.hits;
-  const MAX_RESULTS = 1;
+  const MAX_RESULTS = 4;
   // limit hits to MAX_RESULTS
   if (hits.length > MAX_RESULTS) {
     hits.splice(MAX_RESULTS, hits.length - MAX_RESULTS);
