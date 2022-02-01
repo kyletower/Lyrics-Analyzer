@@ -21,20 +21,13 @@ export default async function handler(req, res) {
   const urls = await getURLs(data);
   console.log({ urls });
   const lyricsAsTextArray = await getLyricsAsText(urls);
-  // console.log({ lyricsAsTextArray });
-  // data.response.hits[idx].result.lyrics_text
-  // analyze lyrics func returns '' if clean, else returns list of explicit words
   const profaneWords = analyzeLyrics(lyricsAsTextArray);
-  //   const totalNumberOfProfaneWords = Object.keys(profaneWords).length;
-  //   console.log(
-  //     url + ' ' + totalNumberOfProfaneWords === 0
-  //       ? 'CLEAN'
-  //       : 'EXPLICIT (' + totalNumberOfProfaneWords + ' profane words)'
-  //   );
+
   console.log({ profaneWords });
 
   for (let i = 0; i < lyricsAsTextArray.length; i++) {
     data.response.hits[i].result.lyrics_text = lyricsAsTextArray[i];
+    // only 1 of the two properties is necessary, having both is a bit redundant
     data.response.hits[i].result.explicit =
       Object.keys(profaneWords[i]).length !== 0;
     data.response.hits[i].result.explicit_words = Object.keys(profaneWords[i]);
