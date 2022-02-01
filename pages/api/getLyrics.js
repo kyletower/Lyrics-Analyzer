@@ -5,11 +5,11 @@ import fetch from 'node-fetch';
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-// const API_CLIENT_ACCESS_TOKEN = process.env;
-const API_CLIENT_ACCESS_TOKEN =
-  '2BFVGS1aXQXiTmuahLb1PbnfhksNqh5aRPGJ-CJR_8vfzMVhnCFb0s4qemBrvQq7';
+const { API_CLIENT_ACCESS_TOKEN } = process.env;
+// const API_CLIENT_ACCESS_TOKEN = '2BFVGS1aXQXiTmuahLb1PbnfhksNqh5aRPGJ-CJR_8vfzMVhnCFb0s4qemBrvQq7';
 const API_SEARCH_URL = `https://api.genius.com/search?q=`;
 
+// export default async handler = () => { } ???
 export default async function handler(req, res) {
   const { q } = req.query;
   const response = await fetch(`${API_SEARCH_URL}${q}`, {
@@ -45,31 +45,28 @@ const getURLs = (data) => {
   return urls;
 };
 
-const getLyricsAsText = (urls) => {
+const getLyricsAsText = async (urls) => {
   const lyricsTextArray = [];
   urls.forEach((url) => {
-    JSDOM.fromURL(url).then((dom) => {
-      // const domSerialized = dom.serialize();
-      // div id="lyrics-root"
-      // class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
-      const lyricsDiv =
-        dom.window.document.querySelector('#lyrics-root') ||
-        dom.window.document.querySelector(
-          '.Lyrics__Container-sc-1ynbvzw-6 lgZgEN'
-        );
-      const lyricsDivAsString = lyricsDiv.innerHTML;
-      const lyricsDivAsStringModifed = lyricsDivAsString.replaceAll(
-        `<br>`,
-        `\n`
+    const dom = JSDOM.fromURL(url);
+
+    // const domSerialized = dom.serialize();
+    // div id="lyrics-root"
+    // class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
+    const lyricsDiv =
+      dom.window.document.querySelector('#lyrics-root') ||
+      dom.window.document.querySelector(
+        '.Lyrics__Container-sc-1ynbvzw-6 lgZgEN'
       );
+    const lyricsDivAsString = lyricsDiv.innerHTML;
+    const lyricsDivAsStringModifed = lyricsDivAsString.replaceAll(`<br>`, `\n`);
 
-      lyricsDiv.innerHTML = lyricsDivAsStringModifed;
-      const lyricsText = lyricsDiv.textContent;
-      //   console.log(lyricsText);
+    lyricsDiv.innerHTML = lyricsDivAsStringModifed;
+    const lyricsText = lyricsDiv.textContent;
+    //   console.log(lyricsText);
 
-      lyricsTextArray.push(lyricsText);
-      //   console.log({ lyricsTextArray });
-    });
+    lyricsTextArray.push(lyricsText);
+    //   console.log({ lyricsTextArray });
   });
 
   return lyricsTextArray;
