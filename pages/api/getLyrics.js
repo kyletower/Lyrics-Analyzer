@@ -19,9 +19,9 @@ export default async function handler(req, res) {
 
   const data = await response.json();
   const urls = await getURLs(data);
-  console.log(urls);
+  console.log({ urls });
   const lyricsAsTextArray = getLyricsAsText(urls);
-  console.log(lyricsAsTextArray);
+  console.log({ lyricsAsTextArray });
   // data.response.hits[idx].result.lyrics_text
   // analyze lyrics func returns '' if clean, else returns list of explicit words
   const profaneWords = analyzeLyrics(lyricsAsTextArray);
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
   //       ? 'CLEAN'
   //       : 'EXPLICIT (' + totalNumberOfProfaneWords + ' profane words)'
   //   );
-  console.log(profaneWords);
+  console.log({ profaneWords });
   res.status(200).json(data);
 }
 
@@ -52,7 +52,11 @@ const getLyricsAsText = (urls) => {
       // const domSerialized = dom.serialize();
       // div id="lyrics-root"
       // class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
-      const lyricsDiv = dom.window.document.querySelector('#lyrics-root');
+      const lyricsDiv =
+        dom.window.document.querySelector('#lyrics-root') ||
+        dom.window.document.querySelector(
+          '.Lyrics__Container-sc-1ynbvzw-6 lgZgEN'
+        );
       const lyricsDivAsString = lyricsDiv.innerHTML;
       const lyricsDivAsStringModifed = lyricsDivAsString.replaceAll(
         `<br>`,
@@ -64,6 +68,7 @@ const getLyricsAsText = (urls) => {
       //   console.log(lyricsText);
 
       lyricsTextArray.push(lyricsText);
+      //   console.log({ lyricsTextArray });
     });
   });
 
@@ -84,6 +89,3 @@ const analyzeLyrics = (lyricsArray) => {
   return wordCounts;
   // return { lyrics, wordCounts };
 };
-
-// div id="lyrics-root"
-// class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
