@@ -20,3 +20,8 @@ a {
   font-weight: bold;
   font-size: x-small;
 }
+
+.explicit-words {
+  color: red;
+  font-size: xx-small;
+}

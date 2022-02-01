@@ -18,6 +18,13 @@ const Results = ({ geniusData }) => {
                 {hit.result.explicit ? 'E ' : ''}
               </span>
               {hit.result.full_title}
+              <span className='explicit-words'>
+                {hit.result.explicit_words.length > 0 && ' [ '}
+                {hit.result.explicit_words.map(
+                  (explicit_word, idx) => explicit_word + ' '
+                )}
+                {hit.result.explicit_words.length > 0 && ' ]'}
+              </span>
             </p>
           </>
         ))}
