@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   const data = await response.json();
   const urls = await getURLs(data);
   console.log({ urls });
-  const lyricsAsTextArray = getLyricsAsText(urls);
+  const lyricsAsTextArray = await getLyricsAsText(urls);
   console.log({ lyricsAsTextArray });
   // data.response.hits[idx].result.lyrics_text
   // analyze lyrics func returns '' if clean, else returns list of explicit words
@@ -47,9 +47,8 @@ const getURLs = (data) => {
 
 const getLyricsAsText = async (urls) => {
   const lyricsTextArray = [];
-  urls.forEach((url) => {
-    // VM1248:1 Uncaught (in promise) SyntaxError: Unexpected token < in JSON at position 0
-    const dom = JSDOM.fromURL(url);
+  await urls.forEach(async (url) => {
+    const dom = await JSDOM.fromURL(url);
 
     // const domSerialized = dom.serialize();
     // div id="lyrics-root"
@@ -64,9 +63,10 @@ const getLyricsAsText = async (urls) => {
 
     lyricsDiv.innerHTML = lyricsDivAsStringModifed;
     const lyricsText = lyricsDiv.textContent;
-    //   console.log(lyricsText);
+    // console.log(lyricsText);
 
     lyricsTextArray.push(lyricsText);
+    console.log(lyricsTextArray.length);
     //   console.log({ lyricsTextArray });
   });
 
