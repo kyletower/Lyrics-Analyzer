@@ -23,10 +23,12 @@ export default async function handler(req, res) {
   const lyricsAsTextArray = await getLyricsAsText(urls);
   const profaneWords = analyzeLyrics(lyricsAsTextArray);
 
-  console.log({ profaneWords });
+  // console.log({ profaneWords });
 
   for (let i = 0; i < lyricsAsTextArray.length; i++) {
-    data.response.hits[i].result.lyrics_text = lyricsAsTextArray[i];
+    data.response.hits[i].result.lyrics_text = lyricsAsTextArray[i].lyricsText;
+    data.response.hits[i].result.lyrics_innerHTML =
+      lyricsAsTextArray[i].lyricsInnerHTML;
     // only 1 of the two properties is necessary, having both is a bit redundant
     data.response.hits[i].result.explicit =
       Object.keys(profaneWords[i]).length !== 0;
@@ -39,7 +41,7 @@ export default async function handler(req, res) {
 
 const getURLs = (data) => {
   const hits = data.response.hits;
-  const MAX_RESULTS = 4;
+  const MAX_RESULTS = 5;
   // limit hits to MAX_RESULTS
   if (hits.length > MAX_RESULTS) {
     hits.splice(MAX_RESULTS, hits.length - MAX_RESULTS);
@@ -79,8 +81,11 @@ const getLyricsAsText = async (urls) => {
     const lyricsText = lyricsDiv.textContent;
     // console.log(lyricsText);
 
-    lyricsTextArray.push(lyricsText);
-    console.log(lyricsTextArray.length);
+    lyricsTextArray.push({
+      lyricsText: lyricsText,
+      lyricsInnerHTML: lyricsDivAsString,
+    });
+    // console.log(lyricsTextArray.length);
     //   console.log({ lyricsTextArray });
   });
 
@@ -98,8 +103,8 @@ const analyzeLyrics = (lyricsArray) => {
   // }
 
   // // forEach doesn't exist for lyricsArray
-  lyricsArray.forEach((lyric) => {
-    wordCounts.push(p.getWordCounts(lyric));
+  lyricsArray.forEach((lyricObject) => {
+    wordCounts.push(p.getWordCounts(lyricObject.lyricsText));
   });
 
   //   console.log(wordCounts);

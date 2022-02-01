@@ -1,6 +1,10 @@
 import Image from 'next/image';
 
 const Results = ({ geniusData }) => {
+  const handleSongClick = (event) => {
+    console.log(event);
+  };
+
   return (
     <div>
       {geniusData &&
@@ -8,12 +12,12 @@ const Results = ({ geniusData }) => {
           <>
             {/* <Image
               key={idx}
-              src='/pages/explicit.png'
-              alt='explicit content'
-              width={200}
-              height={127}
+              src=''
+              alt=''
+              width={}
+              height={}
             /> */}
-            <p key={idx}>
+            <p key={idx} onClick={handleSongClick}>
               <span className='red-bold-small'>
                 {hit.result.explicit ? 'E ' : ''}
               </span>
@@ -26,6 +30,10 @@ const Results = ({ geniusData }) => {
                 {hit.result.explicit_words.length > 0 && ' ]'}
               </span>
             </p>
+            <div
+              className='lyrics'
+              dangerouslySetInnerHTML={{ __html: hit.result.lyrics_innerHTML }}
+            ></div>
           </>
         ))}
     </div>
