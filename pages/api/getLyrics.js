@@ -18,7 +18,20 @@ export default async function handler(req, res) {
   });
 
   const data = await response.json();
-  getURLs(data);
+  const urls = await getURLs(data);
+  console.log(urls);
+  const lyricsAsText = getLyricsAsText(urls);
+  console.log(lyricsAsText);
+  // data.response.hits[idx].result.lyrics_text
+  // analyze lyrics func returns '' if clean, else returns list of explicit words
+  const profaneWords = analyzeLyrics(lyricsAsText);
+  //   const totalNumberOfProfaneWords = Object.keys(profaneWords).length;
+  //   console.log(
+  //     url + ' ' + totalNumberOfProfaneWords === 0
+  //       ? 'CLEAN'
+  //       : 'EXPLICIT (' + totalNumberOfProfaneWords + ' profane words)'
+  //   );
+  console.log(profaneWords);
   res.status(200).json(data);
 }
 
@@ -29,7 +42,10 @@ const getURLs = (data) => {
     hits.splice(4, hits.length - 4);
   }
   const urls = hits.map((hit) => hit.result.url);
-  console.log(urls);
+  return urls;
+};
+
+const getLyricsAsText = (urls) => {
   urls.forEach((url) => {
     JSDOM.fromURL(url).then((dom) => {
       // const domSerialized = dom.serialize();
@@ -45,46 +61,22 @@ const getURLs = (data) => {
       lyricsDiv.innerHTML = lyricsDivAsStringModifed;
       const lyricsText = lyricsDiv.textContent;
       //   console.log(lyricsText);
-      // analyze lyrics func returns '' if clean, else returns list of explicit words
-      const profaneWords = analyzeLyrics(lyricsText);
-      const totalNumberOfProfaneWords = Object.keys(profaneWords).length;
-      console.log(
-        url + ' ' + totalNumberOfProfaneWords === 0
-          ? 'CLEAN'
-          : 'EXPLICIT (' + totalNumberOfProfaneWords + ' profane words)'
-      );
-      console.log(profaneWords);
+
+      return lyricsText;
     });
   });
 };
 
 const analyzeLyrics = (lyrics) => {
-  // 1. get list of bad words
-  // 2. for each word in lyrics
-  // 3. if word in bad words
-  // 4. add to list of bad words in song
-  // 5. return { lyrics, badWrods}
   var Profane = require('profane');
   var p = new Profane();
   p.removeWord('pis');
   p.removeWord('ho');
-  // get the set of all inappropriate words in a string
-  // var wordCounts = p.getWordCounts("hell no dude");
   var wordCounts = p.getWordCounts(lyrics);
   //   console.log(wordCounts);
   return wordCounts;
+  // return { lyrics, wordCounts };
 };
 
-// const getURL = (data) => {
-//   const hit = data.response.hits[0];
-//   const url = hit.result.url;
-//   console.log(url);
-//   //   { pretendToBeVisual: true }
-//   JSDOM.fromURL(url).then((dom) => {
-//     // const domSerialized = dom.serialize();
-//     // div id="lyrics-root"
-//     // class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
-//     const lyricsText = dom.window.document.querySelector('#lyrics-root');
-//     console.log(lyricsText.textContent);
-//   });
-// };
+// div id="lyrics-root"
+// class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
