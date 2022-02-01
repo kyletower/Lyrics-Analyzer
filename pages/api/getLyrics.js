@@ -12,14 +12,12 @@ const API_SEARCH_URL = `https://api.genius.com/search?q=`;
 // export default async handler = () => { } ???
 export default async function handler(req, res) {
   const { q } = req.query;
-  console.log(q);
   const response = await fetch(`${API_SEARCH_URL}${q}`, {
     method: 'GET',
     headers: { Authorization: 'Bearer ' + API_CLIENT_ACCESS_TOKEN },
   });
 
   const data = await response.json();
-  console.log(data);
   const urls = await getURLs(data);
   console.log({ urls });
   const lyricsAsTextArray = getLyricsAsText(urls);
@@ -50,6 +48,7 @@ const getURLs = (data) => {
 const getLyricsAsText = async (urls) => {
   const lyricsTextArray = [];
   urls.forEach((url) => {
+    // VM1248:1 Uncaught (in promise) SyntaxError: Unexpected token < in JSON at position 0
     const dom = JSDOM.fromURL(url);
 
     // const domSerialized = dom.serialize();
