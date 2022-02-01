@@ -37,9 +37,10 @@ export default async function handler(req, res) {
 
 const getURLs = (data) => {
   const hits = data.response.hits;
-  // limit hits to 4
-  if (hits.length > 4) {
-    hits.splice(4, hits.length - 4);
+  const MAX_RESULTS = 1;
+  // limit hits to MAX_RESULTS
+  if (hits.length > MAX_RESULTS) {
+    hits.splice(MAX_RESULTS, hits.length - MAX_RESULTS);
   }
   const urls = hits.map((hit) => hit.result.url);
   return urls;
@@ -47,12 +48,23 @@ const getURLs = (data) => {
 
 const getLyricsAsText = async (urls) => {
   const lyricsTextArray = [];
-  await urls.forEach(async (url) => {
-    const dom = await JSDOM.fromURL(url);
 
-    // const domSerialized = dom.serialize();
-    // div id="lyrics-root"
-    // class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
+  const getDocumentsFromURLs = async (urls) => {
+    const documents = [];
+    for (let i = 0; i < urls.length; i++) {
+      const dom = await JSDOM.fromURL(urls[i]);
+      documents.push(dom);
+    }
+
+    return documents;
+  };
+
+  const documents = await getDocumentsFromURLs(urls);
+
+  // const domSerialized = dom.serialize();
+  // div id="lyrics-root"
+  // class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
+  documents.forEach((dom) => {
     const lyricsDiv =
       dom.window.document.querySelector('#lyrics-root') ||
       dom.window.document.querySelector(
@@ -79,14 +91,14 @@ const analyzeLyrics = (lyricsArray) => {
   var wordCounts = [];
   p.removeWord('pis');
   p.removeWord('ho');
-  for (let i = 0; i < lyricsArray.length; i++) {
-    wordCounts.push(p.getWordCounts(lyricsArray[i]));
-  }
+  // for (let i = 0; i < lyricsArray.length; i++) {
+  //   wordCounts.push(p.getWordCounts(lyricsArray[i]));
+  // }
 
   // // forEach doesn't exist for lyricsArray
-  // lyricsArray.forEach((lyric) => {
-  //   wordCounts.push(p.getWordCounts(lyric));
-  // });
+  lyricsArray.forEach((lyric) => {
+    wordCounts.push(p.getWordCounts(lyric));
+  });
 
   //   console.log(wordCounts);
   return wordCounts;
