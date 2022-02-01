@@ -20,11 +20,11 @@ export default async function handler(req, res) {
   const data = await response.json();
   const urls = await getURLs(data);
   console.log(urls);
-  const lyricsAsText = getLyricsAsText(urls);
-  console.log(lyricsAsText);
+  const lyricsAsTextArray = getLyricsAsText(urls);
+  console.log(lyricsAsTextArray);
   // data.response.hits[idx].result.lyrics_text
   // analyze lyrics func returns '' if clean, else returns list of explicit words
-  const profaneWords = analyzeLyrics(lyricsAsText);
+  const profaneWords = analyzeLyrics(lyricsAsTextArray);
   //   const totalNumberOfProfaneWords = Object.keys(profaneWords).length;
   //   console.log(
   //     url + ' ' + totalNumberOfProfaneWords === 0
@@ -46,6 +46,7 @@ const getURLs = (data) => {
 };
 
 const getLyricsAsText = (urls) => {
+  const lyricsTextArray = [];
   urls.forEach((url) => {
     JSDOM.fromURL(url).then((dom) => {
       // const domSerialized = dom.serialize();
@@ -62,17 +63,23 @@ const getLyricsAsText = (urls) => {
       const lyricsText = lyricsDiv.textContent;
       //   console.log(lyricsText);
 
-      return lyricsText;
+      lyricsTextArray.push(lyricsText);
     });
   });
+
+  return lyricsTextArray;
 };
 
-const analyzeLyrics = (lyrics) => {
+const analyzeLyrics = (lyricsArray) => {
   var Profane = require('profane');
   var p = new Profane();
+  var wordCounts = [];
   p.removeWord('pis');
   p.removeWord('ho');
-  var wordCounts = p.getWordCounts(lyrics);
+  lyricsArray.forEach((lyric) => {
+    wordCounts.push(p.getWordCounts(lyric));
+  });
+
   //   console.log(wordCounts);
   return wordCounts;
   // return { lyrics, wordCounts };
