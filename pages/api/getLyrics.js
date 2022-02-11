@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { getURL } from 'next/dist/shared/lib/utils';
 import fetch from 'node-fetch';
+import Profane from 'profane';
 
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
@@ -93,11 +94,12 @@ const getLyricsAsText = async (urls) => {
 };
 
 const analyzeLyrics = (lyricsArray) => {
-  var Profane = require('profane');
+  // var Profane = require('profane');
   var p = new Profane();
+  p.setUseWholeWordMatch(true);
   var wordCounts = [];
-  p.removeWord('pis');
-  p.removeWord('ho');
+  // p.removeWord('pis');
+  // p.removeWord('ho');
   // for (let i = 0; i < lyricsArray.length; i++) {
   //   wordCounts.push(p.getWordCounts(lyricsArray[i]));
   // }

@@ -30,10 +30,10 @@ const Results = ({ geniusData }) => {
                 {hit.result.explicit_words.length > 0 && ' ]'}
               </span>
             </p>
-            <div
+            {/* <div
               className='lyrics'
               dangerouslySetInnerHTML={{ __html: hit.result.lyrics_innerHTML }}
-            ></div>
+            ></div> */}
           </>
         ))}
     </div>
