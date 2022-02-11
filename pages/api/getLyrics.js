@@ -98,18 +98,11 @@ const analyzeLyrics = (lyricsArray) => {
   var p = new Profane();
   p.setUseWholeWordMatch(true);
   var wordCounts = [];
-  // p.removeWord('pis');
-  // p.removeWord('ho');
-  // for (let i = 0; i < lyricsArray.length; i++) {
-  //   wordCounts.push(p.getWordCounts(lyricsArray[i]));
-  // }
 
-  // // forEach doesn't exist for lyricsArray
   lyricsArray.forEach((lyricObject) => {
     wordCounts.push(p.getWordCounts(lyricObject.lyricsText));
   });
 
-  //   console.log(wordCounts);
   return wordCounts;
   // return { lyrics, wordCounts };
 };
