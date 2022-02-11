@@ -26,6 +26,9 @@ a {
   font-size: xx-small;
 }
 
+.lyrics {
+  font-size: small;
+}
 .hidden {
   display: none;
 }

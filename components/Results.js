@@ -9,7 +9,8 @@ import Image from 'next/image';
 
 const Results = ({ geniusData }) => {
   const handleSongClick = (event) => {
-    console.log(event);
+    console.log(event.target.nextElementSibling.classList);
+    event.target.nextElementSibling.classList.toggle('hidden');
   };
 
   return (
