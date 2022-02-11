@@ -21,9 +21,9 @@ const Results = ({ geniusData }) => {
               key={idx}
               src={hit.result.header_image_thumbnail_url}
               alt='album cover'
-              width={25}
-              height={25}
-              layout='responsive'
+              width={50}
+              height={50}
+              // layout='responsive'
             />
             <p key={idx} onClick={handleSongClick}>
               <span className='red-bold-small'>
