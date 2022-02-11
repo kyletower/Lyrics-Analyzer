@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 
 const getURLs = (data) => {
   const hits = data.response.hits;
-  const MAX_RESULTS = 5;
+  const MAX_RESULTS = 3;
   // limit hits to MAX_RESULTS
   if (hits.length > MAX_RESULTS) {
     hits.splice(MAX_RESULTS, hits.length - MAX_RESULTS);
@@ -80,14 +80,11 @@ const getLyricsAsText = async (urls) => {
 
     lyricsDiv.innerHTML = lyricsDivAsStringModifed;
     const lyricsText = lyricsDiv.textContent;
-    // console.log(lyricsText);
 
     lyricsTextArray.push({
       lyricsText: lyricsText,
       lyricsInnerHTML: lyricsDivAsString,
     });
-    // console.log(lyricsTextArray.length);
-    //   console.log({ lyricsTextArray });
   });
 
   return lyricsTextArray;
