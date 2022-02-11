@@ -25,3 +25,7 @@ a {
   color: red;
   font-size: xx-small;
 }
+
+.hidden {
+  display: none;
+}
