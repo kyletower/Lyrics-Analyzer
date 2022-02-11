@@ -16,10 +16,18 @@ const Search = ({ setGeniusData }) => {
       .then((data) => setGeniusData(data) || console.log(data));
   };
 
+  const keyPressHandler = (event) => {
+    console.log(event.key);
+    if (event.key === 'Enter') {
+      handleGo();
+    }
+  };
+
   return (
     <>
       <input
         onChange={handleChange}
+        onKeyPress={(e) => keyPressHandler(e)}
         placeholder='Enter song/track title or artist or lyrics'
         type='search'
         value={searchQuery}
