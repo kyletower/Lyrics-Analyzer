@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { getURL } from 'next/dist/shared/lib/utils';
+// import { getURL } from 'next/dist/shared/lib/utils';
 import fetch from 'node-fetch';
 import Profane from 'profane';
 
@@ -20,11 +20,9 @@ export default async function handler(req, res) {
 
   const data = await response.json();
   const urls = await getURLs(data);
-  console.log({ urls });
+  // console.log({ urls });
   const lyricsAsTextArray = await getLyricsAsText(urls);
   const profaneWords = analyzeLyrics(lyricsAsTextArray);
-
-  // console.log({ profaneWords });
 
   for (let i = 0; i < lyricsAsTextArray.length; i++) {
     data.response.hits[i].result.lyrics_text = lyricsAsTextArray[i].lyricsText;
@@ -35,7 +33,6 @@ export default async function handler(req, res) {
       Object.keys(profaneWords[i]).length !== 0;
     data.response.hits[i].result.explicit_words = Object.keys(profaneWords[i]);
   }
-  // data.response.hits[idx].result.lyrics_text = lyricsAsTextArray[idx];
 
   res.status(200).json(data);
 }
@@ -101,5 +98,5 @@ const analyzeLyrics = (lyricsArray) => {
   });
 
   return wordCounts;
-  // return { lyrics, wordCounts };
+  // return { lyrics, wordCounts };  // for highlighting in context of full lyrics
 };
