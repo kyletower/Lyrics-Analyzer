@@ -13,6 +13,8 @@ const Results = ({ geniusData }) => {
     event.target.nextElementSibling.classList.toggle('hidden');
   };
 
+  // for each profane word, find profane word and replace
+  // with <span class="profane">profanity</span>
   return (
     <div>
       {geniusData &&
