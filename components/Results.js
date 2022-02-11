@@ -1,3 +1,10 @@
+// TO DO:
+// Album Thumbnail: ...result.header_image_thumbnail_url
+// Clicking on a result displays full lyrics
+// full lyrics displays profane words highlighted
+// https://images.genius.com/fbb184d87696e22dfa4a9eaebaed0a8f.300x300x1.jpg
+//              src={hit.result.header_image_thumbnail_url}
+
 import Image from 'next/image';
 
 const Results = ({ geniusData }) => {
@@ -10,13 +17,14 @@ const Results = ({ geniusData }) => {
       {geniusData &&
         geniusData.response.hits.map((hit, idx) => (
           <>
-            {/* <Image
+            <Image
               key={idx}
-              src=''
-              alt=''
-              width={}
-              height={}
-            /> */}
+              src={hit.result.header_image_thumbnail_url}
+              alt='album cover'
+              width={25}
+              height={25}
+              layout='responsive'
+            />
             <p key={idx} onClick={handleSongClick}>
               <span className='red-bold-small'>
                 {hit.result.explicit ? 'E ' : ''}
