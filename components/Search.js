@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 const Search = ({ setGeniusData }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -10,10 +12,13 @@ const Search = ({ setGeniusData }) => {
     if (!searchQuery) {
       return;
     }
-
+    setIsLoading(true);
     fetch(`/api/getLyrics?q=${searchQuery}`)
       .then((res) => res.json())
-      .then((data) => setGeniusData(data) || console.log(data));
+      .then(
+        (data) =>
+          setGeniusData(data) || setIsLoading(false) || console.log(data)
+      );
   };
 
   const keyPressHandler = (event) => {
@@ -33,6 +38,7 @@ const Search = ({ setGeniusData }) => {
         value={searchQuery}
       />
       <button onClick={handleGo}>Go</button>
+      {isLoading && <p>Loading...</p>}
     </>
   );
 };

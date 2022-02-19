@@ -1,10 +1,6 @@
 // TO DO:
-// Album Thumbnail: ...result.header_image_thumbnail_url
-// Clicking on a result displays full lyrics
 // full lyrics displays profane words highlighted
-// https://images.genius.com/fbb184d87696e22dfa4a9eaebaed0a8f.300x300x1.jpg
-//              src={hit.result.header_image_thumbnail_url}
-
+// Loading spinner
 import Image from 'next/image';
 
 const Results = ({ geniusData }) => {
