@@ -76,19 +76,35 @@ const getLyricsAsText = async (urls) => {
     // get all <a> tags
     let aTags = lyricsDiv.getElementsByTagName('a');
     // remove all <a> tags
-    while (aTags[0]) {
-      aTags[0].parentNode.removeChild(aTags[0]);
+    // while (aTags[0]) {
+    //   aTags[0].parentNode.removeChild(aTags[0]);
+    // }
+
+    // replace anchor tags with p tags
+    // for each anchor tag, create a p tag whose textContent = a textContent
+    // for (let i = 0; i < aTags.length; i++) {
+    //   const p = dom.window.document.createElement('p');
+    //   p.textContent = aTags[i].textContent;
+    //   // aTags[i].replaceWith(p);
+    //   aTags[i].parentNode.replaceChild(p, aTags[i]);
+    // }
+    // get all footer tags
+    let footerTags = lyricsDiv.getElementsByClassName(
+      'Lyrics__Footer-sc-1ynbvzw-2 lYpBt'
+    );
+    while (footerTags[0]) {
+      footerTags[0].parentNode.removeChild(footerTags[0]);
     }
 
-    const lyricsDivAsString = lyricsDiv.innerHTML;
-    const lyricsDivAsStringModifed = lyricsDivAsString.replaceAll(`<br>`, `\n`);
+    // const lyricsDivAsString = lyricsDiv.innerHTML;
+    // const lyricsDivAsStringModifed = lyricsDivAsString.replaceAll(`<br>`, `\n`);
 
-    lyricsDiv.innerHTML = lyricsDivAsStringModifed;
+    // lyricsDiv.innerHTML = lyricsDivAsStringModifed;
     const lyricsText = lyricsDiv.textContent;
 
     lyricsTextArray.push({
       lyricsText: lyricsText,
-      lyricsInnerHTML: lyricsDivAsString,
+      lyricsInnerHTML: lyricsDiv.innerHTML,
     });
   });
 
