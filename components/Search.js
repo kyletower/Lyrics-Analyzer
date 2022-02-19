@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 
 const Search = ({ setGeniusData }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,7 +39,16 @@ const Search = ({ setGeniusData }) => {
         value={searchQuery}
       />
       <button onClick={handleGo}>Go</button>
-      {isLoading && <p>Loading...</p>}
+      {isLoading && (
+        <p>
+          <Image
+            src='/images/spinner loading transparent.gif'
+            alt='loading'
+            width={160}
+            height={120}
+          />
+        </p>
+      )}
     </>
   );
 };
