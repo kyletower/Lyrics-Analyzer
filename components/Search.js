@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
+import LoadingSpinner from './LoadingSpinner';
 
 const Search = ({ setGeniusData }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,12 +42,7 @@ const Search = ({ setGeniusData }) => {
       <button onClick={handleGo}>Go</button>
       {isLoading && (
         <p>
-          <Image
-            src='/images/spinner loading transparent.gif'
-            alt='loading'
-            width={160}
-            height={120}
-          />
+          <LoadingSpinner />
         </p>
       )}
     </>
