@@ -72,6 +72,14 @@ const getLyricsAsText = async (urls) => {
       dom.window.document.querySelector(
         '.Lyrics__Container-sc-1ynbvzw-6 lgZgEN'
       );
+
+    // get all <a> tags
+    let aTags = lyricsDiv.getElementsByTagName('a');
+    // remove all <a> tags
+    while (aTags[0]) {
+      aTags[0].parentNode.removeChild(aTags[0]);
+    }
+
     const lyricsDivAsString = lyricsDiv.innerHTML;
     const lyricsDivAsStringModifed = lyricsDivAsString.replaceAll(`<br>`, `\n`);
 
