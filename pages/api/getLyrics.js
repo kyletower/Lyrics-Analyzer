@@ -92,6 +92,26 @@ const getLyricsAsText = async (urls) => {
       footerTags[0].parentNode.removeChild(footerTags[0]);
     }
 
+    // find spans whose textContent is '' and delete
+    let spanTags = lyricsDiv.getElementsByTagName('span');
+    for (let i = spanTags.length - 1; i > 0; i--) {
+      if (spanTags[i].textContent === '') {
+        console.log('removing span tag with empty textContent');
+        spanTags[i].parentNode.removeChild(spanTags[i]);
+      }
+    }
+
+    // find br whose parent is not a span and delete
+    let brTags = lyricsDiv.getElementsByTagName('br');
+    for (let i = brTags.length - 1; i > 0; i--) {
+      if (brTags[i].parentNode.nodeName !== 'SPAN') {
+        console.log(
+          'removing br tag with parent of ' + brTags[i].parentNode.nodeName
+        );
+        brTags[i].parentNode.removeChild(brTags[i]);
+      }
+    }
+
     // const lyricsDivAsString = lyricsDiv.innerHTML;
     // const lyricsDivAsStringModifed = lyricsDivAsString.replaceAll(`<br>`, `\n`);
 
