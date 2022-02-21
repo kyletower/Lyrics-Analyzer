@@ -2,11 +2,26 @@
 // full lyrics displays profane words highlighted
 // Loading spinner
 import Image from 'next/image';
+// import { useEffect } from 'react';
 
 const Results = ({ geniusData }) => {
   const handleSongClick = (event) => {
     console.log(event.target.nextElementSibling.classList);
     event.target.nextElementSibling.classList.toggle('hidden');
+  };
+
+  // badWords = ['poop']
+  const highlightBadWords = (badWords, lyricsHTML) => {
+    badWords.forEach((badWord) => {
+      console.log('highlighting the baddies:' + badWord);
+      let reBadWord = new RegExp(`\\b${badWord}\\b`, 'ig');
+      lyricsHTML = lyricsHTML.replaceAll(
+        reBadWord,
+        `<span class="highlight">${badWord}</span>`
+      );
+    });
+
+    return lyricsHTML;
   };
 
   // for each profane word, find profane word and replace
@@ -36,10 +51,17 @@ const Results = ({ geniusData }) => {
                 )}
                 {hit.result.explicit_words.length > 0 && ' ]'}
               </span>
+              {/* { find badWord replace with <span class='highlight'>badWord</span>} */}
             </p>
+
             <div
               className='lyrics hidden'
-              dangerouslySetInnerHTML={{ __html: hit.result.lyrics_innerHTML }}
+              dangerouslySetInnerHTML={{
+                __html: highlightBadWords(
+                  hit.result.explicit_words,
+                  hit.result.lyrics_innerHTML
+                ),
+              }}
             ></div>
           </>
         ))}
