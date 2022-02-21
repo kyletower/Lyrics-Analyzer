@@ -1,19 +1,16 @@
-// TO DO:
-// full lyrics displays profane words highlighted
-// Loading spinner
 import Image from 'next/image';
-// import { useEffect } from 'react';
 
 const Results = ({ geniusData }) => {
+  // Show/hide the song lyrics.
   const handleSongClick = (event) => {
-    console.log(event.target.nextElementSibling.classList);
     event.target.nextElementSibling.classList.toggle('hidden');
   };
 
-  // badWords = ['poop']
+  // Given a list of bad words and a DOMString, wrap each bad word into a span
+  // with a class of highlight.
   const highlightBadWords = (badWords, lyricsHTML) => {
     badWords.forEach((badWord) => {
-      console.log('highlighting the baddies:' + badWord);
+      // Match the bad word exactly \b...\b, case insensitive
       let reBadWord = new RegExp(`\\b${badWord}\\b`, 'ig');
       lyricsHTML = lyricsHTML.replaceAll(
         reBadWord,
@@ -24,8 +21,6 @@ const Results = ({ geniusData }) => {
     return lyricsHTML;
   };
 
-  // for each profane word, find profane word and replace
-  // with <span class="profane">profanity</span>
   return (
     <div>
       {geniusData &&
@@ -37,21 +32,19 @@ const Results = ({ geniusData }) => {
               alt='album cover'
               width={50}
               height={50}
-              // layout='responsive'
             />
             <p key={idx} onClick={handleSongClick}>
-              <span className='red-bold-small'>
+              <span key={idx} className='red-bold-small'>
                 {hit.result.explicit ? 'E ' : ''}
               </span>
               {hit.result.full_title}
-              <span className='explicit-words'>
+              <span key={idx} className='explicit-words'>
                 {hit.result.explicit_words.length > 0 && ' [ '}
                 {hit.result.explicit_words.map(
-                  (explicit_word, idx) => explicit_word + ' '
+                  (explicit_word) => explicit_word + ' '
                 )}
                 {hit.result.explicit_words.length > 0 && ' ]'}
               </span>
-              {/* { find badWord replace with <span class='highlight'>badWord</span>} */}
             </p>
 
             <div
@@ -73,4 +66,4 @@ export default Results;
 // Note: should I use
 // import parse from "html-react-parser";
 /* <div className='lyrics'>{parseFloat(hit.result.lyrics_innerHTML}</div> */
-// in lieu of dangerouslySetInnerHTML
+// in lieu of dangerouslySetInnerHTML?
