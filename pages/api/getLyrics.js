@@ -21,14 +21,15 @@ export default async function handler(req, res) {
   const lyricsAsTextArray = await getLyricsAsTextArray(urls);
   const profaneWords = analyzeLyrics(lyricsAsTextArray);
 
+  // Update data to contain lyrics_text, lyrics_innerHTML, explicit, and explicit_words
   for (let i = 0; i < lyricsAsTextArray.length; i++) {
     data.response.hits[i].result.lyrics_text = lyricsAsTextArray[i].lyricsText;
     data.response.hits[i].result.lyrics_innerHTML =
       lyricsAsTextArray[i].lyricsInnerHTML;
-    // NOTE: only 1 of the two properties is necessary, having both is a bit redundant.
+    data.response.hits[i].result.explicit_words = Object.keys(profaneWords[i]);
+    // NOTE: Below is a bit redundant due to the above explicit_words data
     data.response.hits[i].result.explicit =
       Object.keys(profaneWords[i]).length !== 0;
-    data.response.hits[i].result.explicit_words = Object.keys(profaneWords[i]);
   }
 
   res.status(200).json(data);
@@ -137,14 +138,13 @@ const getURLs = (data) => {
   return urls;
 };
 
-const analyzeLyrics = (lyricsArray) => {
-  // var Profane = require('profane');
-  var p = new Profane();
-  p.setUseWholeWordMatch(true);
+const analyzeLyrics = (lyricObjects) => {
+  var profanity = new Profane();
+  profanity.setUseWholeWordMatch(true);
   var wordCounts = [];
 
-  lyricsArray.forEach((lyricObject) => {
-    wordCounts.push(p.getWordCounts(lyricObject.lyricsText));
+  lyricObjects.forEach((lyricObject) => {
+    wordCounts.push(profanity.getWordCounts(lyricObject.lyricsText));
   });
 
   return wordCounts;
