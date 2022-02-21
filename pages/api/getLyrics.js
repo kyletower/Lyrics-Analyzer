@@ -82,12 +82,12 @@ const getLyricsAsText = async (urls) => {
 
     // replace anchor tags with p tags
     // for each anchor tag, create a p tag whose textContent = a textContent
-    // for (let i = 0; i < aTags.length; i++) {
-    //   const p = dom.window.document.createElement('p');
-    //   p.textContent = aTags[i].textContent;
-    //   // aTags[i].replaceWith(p);
-    //   aTags[i].parentNode.replaceChild(p, aTags[i]);
-    // }
+    for (let i = 0; i < aTags.length; i++) {
+      const p = dom.window.document.createElement('p');
+      p.innerHTML = aTags[i].innerHTML;
+      aTags[0].replaceWith(p);
+      // aTags[i].parentNode.replaceChild(p, aTags[i]);
+    }
     // get all footer tags
     let footerTags = lyricsDiv.getElementsByClassName(
       'Lyrics__Footer-sc-1ynbvzw-2 lYpBt'
