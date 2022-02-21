@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import LoadingSpinner from './LoadingSpinner';
 
 const Search = ({ setGeniusData }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Display what the user is typing in the search box.
   const handleChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
+  // Search API for user query.
+  // NOTE: Switch to async await
   const handleGo = () => {
     if (!searchQuery) {
       return;
@@ -23,8 +25,8 @@ const Search = ({ setGeniusData }) => {
       );
   };
 
+  // Search when the user presses Enter.
   const keyPressHandler = (event) => {
-    console.log(event.key);
     if (event.key === 'Enter') {
       handleGo();
     }
