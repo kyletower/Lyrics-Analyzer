@@ -92,12 +92,23 @@ const getLyricsAsText = async (urls) => {
       footerTags[0].parentNode.removeChild(footerTags[0]);
     }
 
+    // NOTE: perhaps any node whose textContent is empty can be removed
+    // NOTE: Refactor this bad boy into a good boy function
     // find spans whose textContent is '' and delete
     let spanTags = lyricsDiv.getElementsByTagName('span');
     for (let i = spanTags.length - 1; i > 0; i--) {
       if (spanTags[i].textContent === '') {
         console.log('removing span tag with empty textContent');
         spanTags[i].parentNode.removeChild(spanTags[i]);
+      }
+    }
+
+    // find divs whose textContent is '' and delete
+    let divTags = lyricsDiv.getElementsByTagName('div');
+    for (let i = divTags.length - 1; i > 0; i--) {
+      if (divTags[i].textContent === '') {
+        console.log('removing div tag with empty textContent');
+        divTags[i].parentNode.removeChild(divTags[i]);
       }
     }
 
