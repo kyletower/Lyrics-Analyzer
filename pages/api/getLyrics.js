@@ -20,17 +20,7 @@ export default async function handler(req, res) {
   const urls = await getURLs(data);
   const lyricsAsTextArray = await getLyricsAsTextArray(urls);
   const profaneWords = analyzeLyrics(lyricsAsTextArray);
-
-  // Update data to contain lyrics_text, lyrics_innerHTML, explicit, and explicit_words
-  for (let i = 0; i < lyricsAsTextArray.length; i++) {
-    data.response.hits[i].result.lyrics_text = lyricsAsTextArray[i].lyricsText;
-    data.response.hits[i].result.lyrics_innerHTML =
-      lyricsAsTextArray[i].lyricsInnerHTML;
-    data.response.hits[i].result.explicit_words = Object.keys(profaneWords[i]);
-    // NOTE: Below is a bit redundant due to the above explicit_words data
-    data.response.hits[i].result.explicit =
-      Object.keys(profaneWords[i]).length !== 0;
-  }
+  updateData(data, profaneWords, lyricsAsTextArray);
 
   res.status(200).json(data);
 }
@@ -149,4 +139,17 @@ const analyzeLyrics = (lyricObjects) => {
 
   return wordCounts;
   // return { lyrics, wordCounts };  // for highlighting in context of full lyrics
+};
+
+const updateData = (data, profaneWords, lyricsAsTextArray) => {
+  // Update data to contain lyrics_text, lyrics_innerHTML, explicit, and explicit_words
+  for (let i = 0; i < lyricsAsTextArray.length; i++) {
+    data.response.hits[i].result.lyrics_text = lyricsAsTextArray[i].lyricsText;
+    data.response.hits[i].result.lyrics_innerHTML =
+      lyricsAsTextArray[i].lyricsInnerHTML;
+    data.response.hits[i].result.explicit_words = Object.keys(profaneWords[i]);
+    // NOTE: Below is a bit redundant due to the above explicit_words data
+    data.response.hits[i].result.explicit =
+      Object.keys(profaneWords[i]).length !== 0;
+  }
 };
