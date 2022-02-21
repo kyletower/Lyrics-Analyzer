@@ -1,5 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-// import { getURL } from 'next/dist/shared/lib/utils';
 import fetch from 'node-fetch';
 import Profane from 'profane';
 
@@ -7,9 +5,9 @@ const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
 const { API_CLIENT_ACCESS_TOKEN } = process.env;
-// const API_CLIENT_ACCESS_TOKEN = '2BFVGS1aXQXiTmuahLb1PbnfhksNqh5aRPGJ-CJR_8vfzMVhnCFb0s4qemBrvQq7';
 const API_SEARCH_URL = `https://api.genius.com/search?q=`;
 
+// NOTE: Switch to an arrow function:
 // export default async handler = () => { } ???
 export default async function handler(req, res) {
   const { q } = req.query;
@@ -20,15 +18,14 @@ export default async function handler(req, res) {
 
   const data = await response.json();
   const urls = await getURLs(data);
-  // console.log({ urls });
-  const lyricsAsTextArray = await getLyricsAsText(urls);
+  const lyricsAsTextArray = await getLyricsAsTextArray(urls);
   const profaneWords = analyzeLyrics(lyricsAsTextArray);
 
   for (let i = 0; i < lyricsAsTextArray.length; i++) {
     data.response.hits[i].result.lyrics_text = lyricsAsTextArray[i].lyricsText;
     data.response.hits[i].result.lyrics_innerHTML =
       lyricsAsTextArray[i].lyricsInnerHTML;
-    // only 1 of the two properties is necessary, having both is a bit redundant
+    // NOTE: only 1 of the two properties is necessary, having both is a bit redundant.
     data.response.hits[i].result.explicit =
       Object.keys(profaneWords[i]).length !== 0;
     data.response.hits[i].result.explicit_words = Object.keys(profaneWords[i]);
@@ -37,35 +34,10 @@ export default async function handler(req, res) {
   res.status(200).json(data);
 }
 
-const getURLs = (data) => {
-  const hits = data.response.hits;
-  const MAX_RESULTS = 3;
-  // limit hits to MAX_RESULTS
-  if (hits.length > MAX_RESULTS) {
-    hits.splice(MAX_RESULTS, hits.length - MAX_RESULTS);
-  }
-  const urls = hits.map((hit) => hit.result.url);
-  return urls;
-};
-
-const getLyricsAsText = async (urls) => {
-  const lyricsTextArray = [];
-
-  const getDocumentsFromURLs = async (urls) => {
-    const documents = [];
-    for (let i = 0; i < urls.length; i++) {
-      const dom = await JSDOM.fromURL(urls[i]);
-      documents.push(dom);
-    }
-
-    return documents;
-  };
-
+const getLyricsAsTextArray = async (urls) => {
+  const lyricsAsTextArray = [];
   const documents = await getDocumentsFromURLs(urls);
 
-  // const domSerialized = dom.serialize();
-  // div id="lyrics-root"
-  // class="Lyrics__Container-sc-1ynbvzw-6 lgZgEN"
   documents.forEach((dom) => {
     const lyricsDiv =
       dom.window.document.querySelector('#lyrics-root') ||
@@ -73,55 +45,62 @@ const getLyricsAsText = async (urls) => {
         '.Lyrics__Container-sc-1ynbvzw-6 lgZgEN'
       );
 
-    // get all <a> tags
-    let aTags = lyricsDiv.getElementsByTagName('a');
+    convertAnchorTagsToParagraphTags(dom, lyricsDiv);
+    removeElementsByClassName('Lyrics__Footer-sc-1ynbvzw-2 lYpBt', lyricsDiv);
 
-    // replace anchor tags with p tags
-    // for each anchor tag, create a p tag whose textContent = a textContent
-    while (aTags.length > 0) {
-      const p = dom.window.document.createElement('p');
-      p.innerHTML = aTags[0].innerHTML;
-      aTags[0].replaceWith(p);
-    }
+    // const removeElementsByTagName = (tagName, html) => {
+    //   let tagsToRemove = html.getElementsByTagName(tagName);
 
-    // get all footer tags
-    let footerTags = lyricsDiv.getElementsByClassName(
-      'Lyrics__Footer-sc-1ynbvzw-2 lYpBt'
-    );
-    while (footerTags[0]) {
-      footerTags[0].parentNode.removeChild(footerTags[0]);
-    }
+    //   while (tagsToRemove[0]) {
+    //     tagsToRemove[0].parentNode.removeChild(tagsToRemove[0]);
+    //   }
+    // };
+
+    // removeElementsByTagName('footer', lyricsDiv);
+
+    const removeElementsWithEmptyTextContent = (lyricsDiv) => {
+      let tags = lyricsDiv.getElementsByTagName('*');
+
+      for (let i = tags.length - 1; i > 0; i--) {
+        if (tags[i].nodeName !== 'BR' && tags[i].textContent === '') {
+          tags[i].parentNode.removeChild(tags[i]);
+        }
+      }
+    };
+
+    removeElementsWithEmptyTextContent(lyricsDiv);
 
     // NOTE: perhaps any node whose textContent is empty can be removed
     // NOTE: Refactor this bad boy into a good boy function
     // find spans whose textContent is '' and delete
-    let spanTags = lyricsDiv.getElementsByTagName('span');
-    for (let i = spanTags.length - 1; i > 0; i--) {
-      if (spanTags[i].textContent === '') {
-        console.log('removing span tag with empty textContent');
-        spanTags[i].parentNode.removeChild(spanTags[i]);
-      }
-    }
+    // let spanTags = lyricsDiv.getElementsByTagName('span');
+    // for (let i = spanTags.length - 1; i > 0; i--) {
+    //   if (spanTags[i].textContent === '') {
+    //     // console.log('removing span tag with empty textContent');
+    //     spanTags[i].parentNode.removeChild(spanTags[i]);
+    //   }
+    // }
 
-    // find divs whose textContent is '' and delete
-    let divTags = lyricsDiv.getElementsByTagName('div');
-    for (let i = divTags.length - 1; i > 0; i--) {
-      if (divTags[i].textContent === '') {
-        console.log('removing div tag with empty textContent');
-        divTags[i].parentNode.removeChild(divTags[i]);
-      }
-    }
+    // // find divs whose textContent is '' and delete
+    // let divTags = lyricsDiv.getElementsByTagName('div');
+    // for (let i = divTags.length - 1; i > 0; i--) {
+    //   if (divTags[i].textContent === '') {
+    //     // console.log('removing div tag with empty textContent');
+    //     divTags[i].parentNode.removeChild(divTags[i]);
+    //   }
+    // }
 
-    // find br whose parent is not a span and delete
-    let brTags = lyricsDiv.getElementsByTagName('br');
-    for (let i = brTags.length - 1; i > 0; i--) {
-      if (brTags[i].parentNode.nodeName !== 'SPAN') {
-        console.log(
-          'removing br tag with parent of ' + brTags[i].parentNode.nodeName
-        );
-        brTags[i].parentNode.removeChild(brTags[i]);
-      }
-    }
+    // // find br whose parent is not a span and delete
+    // let brTags = lyricsDiv.getElementsByTagName('br');
+    // for (let i = brTags.length - 1; i > 0; i--) {
+    //   if (brTags[i].parentNode.nodeName !== 'SPAN') {
+    //     console
+    //       .log
+    //       // 'removing br tag with parent of ' + brTags[i].parentNode.nodeName
+    //       ();
+    //     brTags[i].parentNode.removeChild(brTags[i]);
+    //   }
+    // }
 
     // const lyricsDivAsString = lyricsDiv.innerHTML;
     // const lyricsDivAsStringModifed = lyricsDivAsString.replaceAll(`<br>`, `\n`);
@@ -129,13 +108,57 @@ const getLyricsAsText = async (urls) => {
     // lyricsDiv.innerHTML = lyricsDivAsStringModifed;
     const lyricsText = lyricsDiv.textContent;
 
-    lyricsTextArray.push({
+    lyricsAsTextArray.push({
       lyricsText: lyricsText,
       lyricsInnerHTML: lyricsDiv.innerHTML,
     });
   });
 
-  return lyricsTextArray;
+  return lyricsAsTextArray;
+};
+
+const getDocumentsFromURLs = async (urls) => {
+  const documents = [];
+  for (let i = 0; i < urls.length; i++) {
+    const dom = await JSDOM.fromURL(urls[i]);
+    documents.push(dom);
+  }
+
+  return documents;
+};
+
+const convertAnchorTagsToParagraphTags = (dom, lyricsDiv) => {
+  // Select all anchor tags and replace with p tags.
+  let aTags = lyricsDiv.getElementsByTagName('a');
+
+  while (aTags.length > 0) {
+    const p = dom.window.document.createElement('p');
+    p.innerHTML = aTags[0].innerHTML;
+    aTags[0].replaceWith(p);
+  }
+
+  return lyricsDiv;
+};
+
+const removeElementsByClassName = (className, html) => {
+  let tagsToRemove = html.getElementsByClassName(className);
+
+  while (tagsToRemove[0]) {
+    tagsToRemove[0].parentNode.removeChild(tagsToRemove[0]);
+  }
+};
+
+const getURLs = (data) => {
+  const hits = data.response.hits;
+  const MAX_RESULTS = 3;
+
+  // Limit results.
+  if (hits.length > MAX_RESULTS) {
+    hits.splice(MAX_RESULTS, hits.length - MAX_RESULTS);
+  }
+
+  const urls = hits.map((hit) => hit.result.url);
+  return urls;
 };
 
 const analyzeLyrics = (lyricsArray) => {
