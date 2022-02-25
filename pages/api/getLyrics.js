@@ -138,7 +138,6 @@ const analyzeLyrics = (lyricObjects) => {
   });
 
   return wordCounts;
-  // return { lyrics, wordCounts };  // for highlighting in context of full lyrics
 };
 
 const updateData = (data, profaneWords, lyricsAsTextArray) => {
