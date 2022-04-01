@@ -25,20 +25,19 @@ const Results = ({ geniusData }) => {
     <div>
       {geniusData &&
         geniusData.response.hits.map((hit, idx) => (
-          <>
+          <div key={idx}>
             <Image
-              key={idx}
               src={hit.result.header_image_thumbnail_url}
               alt='album cover'
               width={50}
               height={50}
             />
-            <p key={idx} onClick={handleSongClick}>
-              <span key={idx} className='red-bold-small'>
+            <p onClick={handleSongClick}>
+              <span className='red-bold-small'>
                 {hit.result.explicit ? 'E ' : ''}
               </span>
               {hit.result.full_title}
-              <span key={idx} className='explicit-words'>
+              <span className='explicit-words'>
                 {hit.result.explicit_words.length > 0 && ' [ '}
                 {hit.result.explicit_words.map(
                   (explicit_word) => explicit_word + ' '
@@ -56,7 +55,7 @@ const Results = ({ geniusData }) => {
                 ),
               }}
             ></div>
-          </>
+          </div>
         ))}
     </div>
   );

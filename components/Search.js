@@ -17,7 +17,7 @@ const Search = ({ setGeniusData }) => {
       return;
     }
     setIsLoading(true);
-    const res = await fetch(`/api/getLyrics?q=${searchQuery}`);
+    const res = await fetch(`/api/getLyrics?q=${searchQuery}`); // catch
     const data = await res.json();
     setGeniusData(data);
     setIsLoading(false);

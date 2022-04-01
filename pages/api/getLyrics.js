@@ -9,9 +9,8 @@ const API_SEARCH_URL = `https://api.genius.com/search?q=`;
 
 // NOTE: Switch to an arrow function:
 // export default async handler = () => { } ???
-export default async function handler(req, res) {
+const handler = async (req, res) => {
   const { q } = req.query;
-  console.log(API_CLIENT_ACCESS_TOKEN);
   const response = await fetch(`${API_SEARCH_URL}${q}`, {
     method: 'GET',
     headers: { Authorization: 'Bearer ' + API_CLIENT_ACCESS_TOKEN },
@@ -24,7 +23,8 @@ export default async function handler(req, res) {
   updateData(data, profaneWords, lyricsAsTextArray);
 
   res.status(200).json(data);
-}
+};
+export default handler;
 
 const getLyricsAsTextArray = async (urls) => {
   const lyricsAsTextArray = [];
