@@ -23,13 +23,6 @@ const Search = ({ setGeniusData }) => {
     setIsLoading(false);
     console.log(data);
   };
-  // const response = await fetch(`${API_SEARCH_URL}${q}`, {
-  // method: 'GET',
-  // headers: { Authorization: 'Bearer ' + API_CLIENT_ACCESS_TOKEN },
-  // });
-  // const data = await response.json();
-  // const urls = await getURLs(data);
-  // const lyricsAsTextArray = await getLyricsAsTextArray(urls)
 
   // Search when the user presses Enter.
   const keyPressHandler = (event) => {
