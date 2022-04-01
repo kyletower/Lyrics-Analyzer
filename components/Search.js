@@ -12,18 +12,24 @@ const Search = ({ setGeniusData }) => {
 
   // Search API for user query.
   // NOTE: Switch to async await
-  const handleGo = () => {
+  const handleGo = async () => {
     if (!searchQuery) {
       return;
     }
     setIsLoading(true);
-    fetch(`/api/getLyrics?q=${searchQuery}`)
-      .then((res) => res.json())
-      .then(
-        (data) =>
-          setGeniusData(data) || setIsLoading(false) || console.log(data)
-      );
+    const res = await fetch(`/api/getLyrics?q=${searchQuery}`);
+    const data = await res.json();
+    setGeniusData(data);
+    setIsLoading(false);
+    console.log(data);
   };
+  // const response = await fetch(`${API_SEARCH_URL}${q}`, {
+  // method: 'GET',
+  // headers: { Authorization: 'Bearer ' + API_CLIENT_ACCESS_TOKEN },
+  // });
+  // const data = await response.json();
+  // const urls = await getURLs(data);
+  // const lyricsAsTextArray = await getLyricsAsTextArray(urls)
 
   // Search when the user presses Enter.
   const keyPressHandler = (event) => {
@@ -41,7 +47,7 @@ const Search = ({ setGeniusData }) => {
         type='search'
         value={searchQuery}
       />
-      <button onClick={handleGo}>Go</button>
+      <button onClick={handleGo}>🔍</button>
       {isLoading && (
         <p>
           <LoadingSpinner />

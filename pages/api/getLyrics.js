@@ -4,7 +4,9 @@ import Profane from 'profane';
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-const { API_CLIENT_ACCESS_TOKEN } = process.env;
+// const { API_CLIENT_ACCESS_TOKEN } = process.env;
+const API_CLIENT_ACCESS_TOKEN =
+  'XRWomInK_vgdANDK-Aukh2c9liW0Yubp3PYmORo2UYIphv1CZgaKNonFWVSx36h7';
 const API_SEARCH_URL = `https://api.genius.com/search?q=`;
 
 // NOTE: Switch to an arrow function:
